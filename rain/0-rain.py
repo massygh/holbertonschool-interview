@@ -1,38 +1,29 @@
 #!/usr/bin/python3
-"""
-0-rain.py
-"""
+"""total square units of water will be retained after it rains"""
 
 
 def rain(walls):
-    """
-    Compute total units of water retained between walls.
-
-    Args:
-        walls (list[int]): non-negative wall heights
-
-    Returns:
-        int: total trapped water
-    """
+    """Calculate the total of water of walls"""
     if not walls or len(walls) < 3:
         return 0
 
-    left, right = 0, len(walls) - 1
-    left_max = right_max = 0
-    water = 0
+    n = len(walls)
+    total = 0
 
-    while left < right:
-        if walls[left] < walls[right]:
-            if walls[left] >= left_max:
-                left_max = walls[left]
-            else:
-                water += left_max - walls[left]
-            left += 1
-        else:
-            if walls[right] >= right_max:
-                right_max = walls[right]
-            else:
-                water += right_max - walls[right]
-            right -= 1
+    left = [0] * n
+    right = [0] * n
 
-    return water
+    left[0] = walls[0]
+    for i in range(1, n):
+        left[i] = max(left[i - 1], walls[i])
+
+    right[-1] = walls[-1]
+    for i in reversed(range(n - 1)):
+        right[i] = max(right[i + 1], walls[i])
+
+    for i in range(1, n - 1):
+        water = min(left[i], right[i]) - walls[i]
+        if water > 0:
+            total += water
+
+    return total

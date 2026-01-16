@@ -1,40 +1,43 @@
 #!/usr/bin/python3
-
 """
-Module implementing dynamic programming solution for the coin change problem.
+0-making_change.py
+
+Compute the fewest number of coins needed to reach a given total.
+
+Prototype: def makeChange(coins, total)
+- Return the fewest number of coins needed to meet total
+- If total is 0 or less, return 0
+- If total cannot be met by any number of coins you have, return -1
+- coins is a list of the values of the coins in your possession
+- You can assume you have an infinite number of each denomination
 """
 
 
 def makeChange(coins, total):
     """
-    Finds the fewest number of coins needed to reach the total.
-    If it's impossible, returns -1.
+    Determine the minimal number of coins needed to reach `total`.
 
     Args:
-        coins (list): list of coin denominations.
-        total (int): target amount to reach.
+        coins (list): Positive integer coin denominations.
+        total (int): Target sum.
 
     Returns:
-        int: minimum number of coins needed, or -1 if impossible.
+        int: Fewest coins to meet `total`, or -1 if impossible.
     """
-
-    # Edge case: if total is zero or negative, no coins are needed.
     if total <= 0:
         return 0
+    if not coins:
+        return -1
 
-    # Initialize DP table with "infinite" values.
-    dp = [float("inf")] * (total + 1)
+    sentinel = total + 1
+    dp = [sentinel] * (total + 1)
     dp[0] = 0
 
-    # Build the solution incrementally.
-    for coin in coins:
-        for amount in range(coin, total + 1):
-            # Check if using the current coin reduces the number of coins.
-            if dp[amount - coin] + 1 < dp[amount]:
-                dp[amount] = dp[amount - coin] + 1
+    for c in coins:
+        if c <= 0:
+            continue
+        for t in range(c, total + 1):
+            if dp[t - c] + 1 < dp[t]:
+                dp[t] = dp[t - c] + 1
 
-    # Check if solution was found.
-    if dp[total] == float("inf"):
-        return -1
-    else:
-        return dp[total]
+    return dp[total] if dp[total] != sentinel else -1

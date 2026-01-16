@@ -1,34 +1,31 @@
 #!/usr/bin/python3
 """
-  Minimum Operations Function.
+This module contains a function that calculates
+the minimum number of operations to achieve n H characters.
 """
 
 
 def minOperations(n):
     """
-      @n: number of operation processed
-      return: int n
-    """
+    Calculate the minimum number of operations needed to
+    reach exactly n H characters using Copy All and Paste.
 
+    Parameters:
+    - n (int): Target number of H characters
+
+    Returns:
+    - int: Minimum number of operations required, or 0 if impossible
+    """
     if n <= 1:
         return 0
 
-    min_operation = 0
+    operations = 0
+    divisor = 2
 
-    current_length = 1
+    while n > 1:
+        while n % divisor == 0:
+            operations += divisor
+            n //= divisor
+        divisor += 1
 
-    store = 0
-
-    # Loop until the current length is equal to n
-    while current_length < n:
-        if n % current_length == 0:
-
-            store = current_length
-
-            min_operation += 1
-
-        current_length += store
-
-        min_operation += 1
-
-    return min_operation
+    return operations

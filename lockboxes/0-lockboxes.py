@@ -1,27 +1,28 @@
 #!/usr/bin/python3
-"""
-  Function to determine if all the lockboxes can be opened
-"""
+""" a methode """
 
 
 def canUnlockAll(boxes):
-    if not boxes or not isinstance(boxes, list):
-        return False
+    """
+    verifie si toutes les boîtes peuvent être ouvertes.
 
-    # Using empty set to keep track of which boxes we've opened (by index)
-    # and give fast lookup without duplicate
-    opened = set()
+    Args:
+        boxes (list of lists): chaque boîte contient des clés.
 
-    # Using the stack LIFO to explore boxes,
-    # and start with the box 0 which is unlocked
-    stack = [0]
+    Returns:
+        bool: True si toutes les boîtes peuvent être ouvertes, sinon False.
+    """
 
-    while stack:
-        current_box = stack.pop()
-        if current_box not in opened:
-            opened.add(current_box)
-            for key in boxes[current_box]:
-                if 0 <= key < len(boxes):
-                    stack.append(key)
+    n = len(boxes)
+    unlocked = set([0])
+    queue = [0]
 
-    return len(opened) == len(boxes)
+    while queue:
+        current_box = queue.pop(0)
+
+        for key in boxes[current_box]:
+            if key < n and key not in unlocked:
+                unlocked.add(key)
+                queue.append(key)
+
+    return len(unlocked) == n

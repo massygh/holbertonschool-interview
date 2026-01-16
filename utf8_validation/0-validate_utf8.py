@@ -1,36 +1,26 @@
 #!/usr/bin/python3
-"""
-0-validate_utf8.py
-"""
+"""UTF-8 validation module"""
 
 
 def validUTF8(data):
-    """
-    Return True if 'data' is a valid UTF-8 byte sequence, else False.
-    data: list[int] – each int is treated as one byte (use its 8 LSBs).
-    """
-    need = 0  # bytes still to read in current code point
+    """Check if a list of integers is a valid UTF-8 encoding"""
+    num_bytes = 0
 
-    for num in data:
-        byte = num & 0xFF              # keep only 8 least-significant bits
+    for byte in data:
+        byte = byte & 0xFF  # On garde les 8 bits de poids faible
 
-        if need == 0:
-            # Figure out how many leading 1s the byte has
-            mask = 0x80
-            count = 0
-            while mask & byte:
-                count += 1
-                mask >>= 1
-
-            if count == 0:             # 1-byte ASCII
-                continue
-            if count == 1 or count > 4:
-                return False           # invalid leader size
-            need = count - 1           # continuation bytes still expected
-        else:
-            # Must be a continuation byte: 10xxxxxx
-            if (byte & 0xC0) != 0x80:
+        if num_bytes == 0:
+            if (byte >> 5) == 0b110:
+                num_bytes = 1
+            elif (byte >> 4) == 0b1110:
+                num_bytes = 2
+            elif (byte >> 3) == 0b11110:
+                num_bytes = 3
+            elif (byte >> 7) != 0:
                 return False
-            need -= 1
+        else:
+            if (byte >> 6) != 0b10:
+                return False
+            num_bytes -= 1
 
-    return need == 0
+    return num_bytes == 0

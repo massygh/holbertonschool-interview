@@ -1,4 +1,20 @@
 # UTF-8 Validation
-## Resources
-* UTF-8 (https://en.wikipedia.org/wiki/UTF-8)
-* Characters, Symbols, and the Unicode Miracle (https://www.youtube.com/watch?v=MijmeoH9LT4)
+
+This project checks whether a list of integers represents a valid UTF-8 encoding.
+
+## Files
+
+- `0-validate_utf8.py`: Contains the function `validUTF8(data)`
+- `0-main.py`: Script for testing the function
+- `README.md`: Project description
+
+## Usage
+
+```bash
+./0-main.py
+```
+
+## Author
+
+Ines Oubabas
+

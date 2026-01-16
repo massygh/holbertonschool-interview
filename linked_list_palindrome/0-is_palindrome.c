@@ -1,67 +1,68 @@
 #include "lists.h"
-#include <stddef.h>
+#include <stdlib.h>
 
 /**
- * reverse_list - reverses a linked list
- * @head: pointer to the head of the list
- * Return: pointer to the new head
+ * reverse_list - Reverses a singly linked list
+ * @head: Pointer to the head of the list
+ * Return: New head of the reversed list
  */
 listint_t *reverse_list(listint_t *head)
 {
-listint_t *prev = NULL, *current = head, *next;
+	listint_t *prev = NULL, *current = head, *next = NULL;
 
-while (current != NULL)
-{
-	next = current->next;
-	current->next = prev;
-	prev = current;
-	current = next;
-}
-return (prev);
+	while (current)
+	{
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+	return (prev);
 }
 
 /**
- * is_palindrome - checks if a singly linked list is a palindrome
- * @head: pointer to pointer of first node of listint_t list
- * Return: 1 if it is a palindrome, 0 if it is not
+ * is_palindrome - Checks if a singly linked list is a palindrome
+ * @head: Double pointer to the head of the list
+ * Return: 1 if it is a palindrome, 0 otherwise
  */
 int is_palindrome(listint_t **head)
 {
-	listint_t *slow, *fast, *first_half, *second_half;
+	listint_t *slow, *fast, *second_half, *reversed, *copy1, *copy2;
 
-	if (*head == NULL || (*head)->next == NULL)
+	if (!head || !(*head) || !(*head)->next)
 		return (1);
 
 	slow = fast = *head;
-	first_half = *head;
 
-	/* Find middle of list */
-	while (fast != NULL && fast->next != NULL)
+	/* Find the middle (slow will point to the middle node) */
+	while (fast && fast->next)
 	{
-		fast = fast->next->next;
 		slow = slow->next;
+		fast = fast->next->next;
 	}
 
-	/* Skip middle element for odd length */
-	if (fast != NULL)
+	/* For odd number of nodes, move slow one step further */
+	if (fast)
 		slow = slow->next;
 
-	/* Reverse second half */
-	second_half = reverse_list(slow);
+	/* Reverse the second half of the list */
+	reversed = reverse_list(slow);
+	second_half = reversed;
 
-	/* Compare halves */
-	while (second_half != NULL)
+	/* Compare first and second half */
+	copy1 = *head;
+	copy2 = reversed;
+	while (copy2)
 	{
-		if (first_half->n != second_half->n)
+		if (copy1->n != copy2->n)
 		{
-			reverse_list(second_half);
+			reverse_list(second_half); /* Restore list */
 			return (0);
 		}
-		first_half = first_half->next;
-		second_half = second_half->next;
+		copy1 = copy1->next;
+		copy2 = copy2->next;
 	}
 
-	/* Restore list */
-	reverse_list(slow);
+	reverse_list(second_half); /* Restore list */
 	return (1);
 }
